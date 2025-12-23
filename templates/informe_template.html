@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Informe de Obra: {{ ID_obra }}</title>
+    <style>
+    @font-face {
+        font-family: 'Encode Sans';
+        src: url('data:font/truetype;charset=utf-8;base64,{{ fuente_regular }}') format('truetype');
+        font-weight: normal;
+    }
+
+    @font-face {
+        font-family: 'Encode Sans';
+        src: url('data:font/truetype;charset=utf-8;base64,{{ fuente_bold }}') format('truetype');
+        font-weight: bold;
+    }
+    
+    body { 
+        font-family: 'Encode Sans'; 
+        padding: 0px;
+        margin: 0px;
+        line-height: 1.1;
+    }
+    .titulo {
+        color: #d9487b;
+        font-weight: bold;
+        padding-bottom: 0 0 5px 0;
+        text-align: left;
+        font-size: 21px;
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-top: 10px;
+        margin-bottom: 8px;
+    }
+    .subtitulo {
+        color: #00b6c9;
+        font-weight: bold;
+        padding-bottom: 5px;
+        text-align: left;
+        font-size: 20px;
+        margin-left: 5%;
+    }
+    .imagen-obra {
+        display: block;
+        margin: 15px auto 0 auto;
+        max-width: 80%;
+        height: auto;
+        border-radius: 5px;
+    }
+    .icono-flecha {
+        height: 18px;
+        vertical-align: top;
+        margin-right: 6px;
+        margin-left: 25px;
+    }
+    .seccion {
+        margin-bottom: 1.5em;
+        padding: 15px;
+        border: 1px solid #ecf0f1;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .campo {
+        margin-bottom: 10px;
+        padding: 8px;
+        border-bottom: 1px dashed #ecf0f1;
+    }
+    .campo:last-child {
+        border-bottom: none;
+    }
+    .valor {
+        color: #2c3e50;
+        font-weight: normal;
+        font-size: 12px;
+        padding-top: 8px;
+        margin-left: 25px;
+    }
+    .memoria {
+        color: #d9487b;
+        font-weight: bold;
+        text-align: left;
+        font-size: 15px;
+        padding-top: 15px;
+        padding-bottom: 5px;
+        margin-top: 10px;
+        margin-left: 7%;
+    }
+    .tabla-informe {
+        background-color: #e6e5e5;
+        border: none;
+        padding: 10px 0;
+        margin: 20px auto 30px auto;
+        max-width: 80%;
+        width: 80%;
+        border-radius: 5px;
+        table-layout: auto;
+        border-collapse: separate;
+        border-spacing: 0px;
+        font-family: 'Encode Sans';
+    }
+    .tabla-informe tr {
+        min-height: 35px;
+    }
+    .tabla-informe th,
+    .tabla-informe td {
+        border: none;
+        border-collapse: collapse;
+    }
+    .tabla-informe .icono {
+        padding: 3px 10px;
+        color: #d9487b;
+        text-align: center;
+        font-weight: bold;
+        font-size: 20px;
+        width: 25px;
+    }
+    .tabla-informe .campo-tabla {
+        width: 30ch;
+        max-width: 30ch;
+        font-weight: normal;
+        font-size: 12px;
+        color: #2c3e50;
+        padding: 3px 10px;
+    }
+    
+    .tabla-informe .valor-tabla {
+        display: block;
+        max-width: 100%;
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: left;
+        padding: 3px 10px;
+    }
+    .footer {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-top: 15px;
+    }
+    .tabla-sintesis {
+        border-right: #d9487b;
+        width: 80%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        padding: auto;
+        text-align: center;
+        border-bottom: none;
+        table-layout: fixed;
+    }
+    .montos-sintesis {
+        border-right: 3px solid #d9487b;
+        padding: 10px;
+        border-bottom: none;
+        border-top: none;
+        color: #00b6c9;
+        font-weight: bold;
+        font-size: 1.3em;
+        text-align: center;
+        font-family: 'Encode Sans';
+        width: 50%;
+        word-break: break-word;
+    }
+    .montos-sintesis:last-child {
+        border-right: none;
+    }
+    .montos-subtitulo {
+        border-right: 3px solid #d9487b;
+        padding: 10px;
+        font-size: 12px;
+        border-bottom: none;
+        border-top: none;
+        width: 50%;
+        word-break: break-word;
+    }
+    .page-break { 
+        page-break-before: always; 
+      }
+    .tabla-imagenes {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 60px;
+        padding-top: 60px;
+    }
+    .tabla-imagenes td {
+        width: 50%;
+        padding: 10px;
+        vertical-align: top;
+        text-align: center;
+    }
+    .imagen-extra {
+        width: 100%;
+        height: auto;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        display: block;
+    }
+    .subtitulo-noticias {
+        color: #d9487b;
+        font-weight: bold;
+        text-align: left;
+        font-size: 25px;
+        margin: 5px 0 30px 10px;
+        padding-bottom: 5px;
+        border-bottom: none;
+        border-left: #2c3e50;
+    }
+
+    .lista-noticias {
+        width: 100%;
+        margin: 0;
+    }
+
+    .seccion-noticias {
+        margin-top: 5px;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    .item-noticia {
+        margin-bottom: 16px;
+        padding: 0 0 0 12px;
+        border-left: 2px solid #d9487b;
+        page-break-inside: avoid;
+    }
+
+    .linea-noticia {
+        display: flex;
+        align-items: baseline;
+        margin-bottom: 3px;
+        line-height: 1.1;
+    }
+
+    .noticia-diario {
+        font-weight: bold;
+        color: #2c3e50;
+        font-size: 16px;
+        white-space: nowrap;
+        padding-right: 4px;
+    }
+
+    .separador {
+        color: #2c3e50;
+        font-weight: normal;
+        font-size: 16px;
+        padding: 0 4px;
+    }
+
+    .noticia-titulo-contenedor {
+        flex: 1;
+    }
+
+    .noticia-titulo {
+        color: #d9487b;
+        text-decoration: underline;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 1.1;
+        display: inline;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid transparent;
+    }
+
+    .noticia-titulo:hover {
+        text-decoration: underline;
+        color: #b33771;
+        border-bottom: 1px solid #b33771;
+    }
+
+    .noticia-copete {
+        color: #2c3e50;
+        font-size: 14px;
+        line-height: 1.25;
+        padding-left: 0;
+        margin-top: 2px;
+        font-weight: normal;
+        text-align: left;
+    }
+    </style>
+</head>
+<body>
+    <div class="subtitulo">
+        <div class="subtitulo">
+            {{ Municipio | upper }}
+            {% if Localidad and Localidad != Municipio %}- {{ Localidad }}{% endif %}
+            {% if Barrio %}- {{ Barrio }}{% endif %}
+        </div>
+        <div class="titulo">{{ Descripcion_Corta }}</div>
+    </div>
+    <div>
+        {% if Imagen_Obra %}
+        <img class="imagen-obra" src="{{ Imagen_Obra }}" alt="Imagen de la obra {{ ID_obra }}">
+        {% endif %}
+    </div>
+    <table class="tabla-informe">
+        <tbody>
+            <tr>
+                <td class="icono">&gt;</td>
+                <td class="campo-tabla">Viviendas Totales: </td>
+                <td class="valor-tabla">{{ Viviendas_Totales }}</td>
+                <td class="icono">&gt;</td>
+                <td class="campo-tabla">Viviendas Entregadas:</td>
+                <td class="valor-tabla">{{ Viviendas_Entregadas }}</td>
+            </tr>
+            <tr>
+                <td class="icono">&gt;</td>
+                <td class="campo-tabla">Estado:</td>
+                <td class="valor-tabla">{{ Estado }}</td>
+                <td class="icono">&gt;</td>
+                <td class="campo-tabla">Viviendas Restantes: </td>
+                <td class="valor-tabla">{{ Viviendas_Restantes }}</td>
+            </tr>
+            <tr>
+                <td class="icono">&gt;</td>
+                <td class="campo-tabla">Municipio:</td>
+                <td class="valor-tabla">{{ Municipio }}</td>
+                <td class="icono">&gt;</td>
+                <td class="campo-tabla">Total UVI: </td>
+                <td class="valor-tabla">{{ Total_UVI }}</td>
+            </tr>
+            <tr>
+                <td class="icono">&gt;</td>
+                <td class="campo-tabla">Localidad: </td>
+                <td class="valor-tabla">{{ Localidad }}</td>
+                <td class="icono">&gt;</td>
+                <td class="campo-tabla">UVIs Restantes: </td>
+                <td class="valor-tabla">
+                    {% if Uvis_Restantes and Uvis_Restantes != "--" %}
+                    {{ Uvis_Restantes }}
+                    {% else %}
+                    {{ Saldo_UVI_Pendiente }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="icono">&gt;</td>
+                <td class="campo-tabla">Monto Convenio:</td>
+                <td class="valor-tabla">{{ Monto_Convenio }}</td>
+                <td class="icono">&gt;</td>
+                <td class="campo-tabla">Avance Físico: </td>
+                <td class="valor-tabla">{{ Avance_fisico }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <table class="tabla-sintesis">
+            <tbody>
+                <tr>
+                    <td class="montos-sintesis">{{ Saldo_Obra_Actualizado }}</td>
+                    <td class="montos-sintesis">{{ Avance_Restante }}</td>
+                </tr>
+                <tr>
+                    <td class="montos-subtitulo"><strong>SALDO DE OBRA ACTUALIZADO</strong></td>
+                    <td class="montos-subtitulo"><strong>AVANCE RESTANTE</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <div class="memoria">
+            <img src="{{ doble_flecha }}" class="icono-flecha" alt=">>">
+            ESTADO ACTUAL / OBSERVACIONES
+        </div>
+        {% if noticias and noticias|length > 0 %}
+        <div class="seccion-noticias">
+            <div class="lista-noticias">
+                {% for noticia in noticias %}
+                <div class="item-noticia">
+                    <div class="linea-noticia">
+                        <span class="noticia-diario">{{ noticia.diario }}</span>
+                        <span class="noticia-titulo-contenedor">
+                            <a href="{{ noticia.link_noticia }}" target="_blank" class="noticia-titulo">
+                                {{ noticia.titulo_noticia }}
+                            </a>
+                        </span>
+                    </div>
+                    <div class="noticia-copete">{{ noticia.copete }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </body>
+</html>

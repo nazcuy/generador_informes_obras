@@ -1,0 +1,153 @@
+# ============================================
+# PYTHON
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ============================================
+# ENTORNOS VIRTUALES
+# ============================================
+venv/
+env/
+ENV/
+.env
+.venv
+env.bak/
+venv.bak/
+
+# ============================================
+# ARCHIVOS DE CONFIGURACIÓN SENSIBLES
+# ============================================
+.env
+.env.local
+.env.development
+.env.production
+secrets.json
+credentials.json
+*.key
+*.pem
+
+# ============================================
+# ARCHIVOS GENERADOS POR EL PROYECTO
+# ============================================
+/informes/
+/logs/
+*.pdf
+*.xlsx
+*.csv
+
+# ============================================
+# SISTEMA OPERATIVO
+# ============================================
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Windows
+desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+
+# ============================================
+# IDEs y EDITORES
+# ============================================
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# ============================================
+# DEPENDENCIAS Y PAQUETES
+# ============================================
+pip-wheel-metadata/
+pip-delete-this-directory.txt
+pip-log.txt
+
+# ============================================
+# TESTING Y COBERTURA
+# ============================================
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ============================================
+# LOGS
+# ============================================
+*.log
+*.log.*
+
+# ============================================
+# ARCHIVOS TEMPORALES
+# ============================================
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ============================================
+# EXCEPCIONES ESPECÍFICAS (MANTENER)
+# ============================================
+!config/.gitkeep
+!templates/.gitkeep
+!assets/.gitkeep
+!assets/images/.gitkeep
+!assets/fonts/.gitkeep
+!utils/.gitkeep
+!scripts/.gitkeep
+!tests/.gitkeep
+!informes/.gitkeep
+!logs/.gitkeep
+
+# Mantener archivos de ejemplo/configuración
+!.env.example

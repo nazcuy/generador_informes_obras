@@ -27,12 +27,12 @@ class CalculosFinancieros:
             String formateado con UVIs restantes
         """
         try:
-            if CalculosFinancieros._is_empty(total_uvi) or CalculosFinancieros._is_empty(paid_uvi):
+            if CalculosFinancieros._esta_vacio(total_uvi) or CalculosFinancieros._esta_vacio(paid_uvi):
                 return "--"
             
             # Limpiar y convertir
-            total_clean = CalculosFinancieros._clean_numeric(total_uvi)
-            paid_clean = CalculosFinancieros._clean_numeric(paid_uvi)
+            total_clean = CalculosFinancieros._numero_limpio(total_uvi)
+            paid_clean = CalculosFinancieros._numero_limpio(paid_uvi)
             
             # Calcular restantes
             remaining = total_clean - paid_clean
@@ -42,7 +42,7 @@ class CalculosFinancieros:
             
             # Formatear como moneda sin decimales
             from .formatters import DataFormatters
-            return DataFormatters.formatear_moneda_sin_decimales(remaining)
+            return DataFormatters.formatear_numero(remaining)
             
         except Exception as e:
             logger.warning(f"Error calculando UVIs restantes: {e} | Total: {total_uvi}, Pagado: {paid_uvi}")
@@ -61,13 +61,13 @@ class CalculosFinancieros:
             String formateado con monto restante
         """
         try:
-            if (CalculosFinancieros._is_empty(updated_amount) or 
-                CalculosFinancieros._is_empty(paid_amount)):
+            if (CalculosFinancieros._esta_vacio(updated_amount) or 
+                CalculosFinancieros._esta_vacio(paid_amount)):
                 return "--"
             
             # Limpiar y convertir
-            updated_clean = CalculosFinancieros._clean_numeric(updated_amount)
-            paid_clean = CalculosFinancieros._clean_numeric(paid_amount)
+            updated_clean = CalculosFinancieros._numero_limpio(updated_amount)
+            paid_clean = CalculosFinancieros._numero_limpio(paid_amount)
             
             # Calcular restantes
             remaining = updated_clean - paid_clean
@@ -95,11 +95,11 @@ class CalculosFinancieros:
             String formateado con porcentaje restante
         """
         try:
-            if CalculosFinancieros._is_empty(current_progress):
+            if CalculosFinancieros._esta_vacio(current_progress):
                 return "--"
             
             # Limpiar y convertir
-            progress_clean = CalculosFinancieros._clean_numeric(current_progress)
+            progress_clean = CalculosFinancieros._numero_limpio(current_progress)
             
             # Si está entre 0 y 1, multiplicar por 100
             if 0 <= progress_clean <= 1:
@@ -132,13 +132,13 @@ class CalculosFinancieros:
             String formateado con viviendas restantes
         """
         try:
-            if (CalculosFinancieros._is_empty(total_houses) or 
-                CalculosFinancieros._is_empty(delivered_houses)):
+            if (CalculosFinancieros._esta_vacio(total_houses) or 
+                CalculosFinancieros._esta_vacio(delivered_houses)):
                 return "--"
             
             # Limpiar y convertir
-            total_clean = CalculosFinancieros._clean_numeric(total_houses)
-            delivered_clean = CalculosFinancieros._clean_numeric(delivered_houses)
+            total_clean = CalculosFinancieros._numero_limpio(total_houses)
+            delivered_clean = CalculosFinancieros._numero_limpio(delivered_houses)
             
             # Calcular restantes
             remaining = total_clean - delivered_clean
@@ -155,7 +155,7 @@ class CalculosFinancieros:
             return "--"
     
     @staticmethod
-    def _clean_numeric(value: Union[str, float, int]) -> float:
+    def _numero_limpio(value: Union[str, float, int]) -> float:
         """
         Limpia y convierte un valor a float.
         
@@ -172,6 +172,6 @@ class CalculosFinancieros:
         return float(value)
     
     @staticmethod
-    def _is_empty(value: Any) -> bool:
+    def _esta_vacio(value: Any) -> bool:
         """Verifica si un valor está vacío"""
         return value in ["--", "", None] or pd.isna(value)

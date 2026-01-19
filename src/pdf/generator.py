@@ -212,7 +212,7 @@ class PDFGenerator:
             # Datos formateados
             'Viviendas_Totales': DataFormatters.formatear_numero(row.get('viv_totales', '--')),
             'Viviendas_Entregadas': DataFormatters.formatear_numero(row.get('viv_entregadas', '--')),
-            'Viviendas_Restantes': CalculosFinancieros.calculate_remaining_houses(
+            'Viviendas_Restantes': CalculosFinancieros.calculo_viviendas_restantes(
                 row.get('viv_totales', '--'), 
                 row.get('viv_entregadas', '--')
             ),
@@ -233,7 +233,7 @@ class PDFGenerator:
             'Monto_Convenio': DataFormatters.formatear_moneda(row.get('monto_convenio', '--')),
             'Fecha_UVI': DataFormatters.formatear_fecha(row.get('fecha_cotizacion_uvi_convenio')),
             'Total_UVI': DataFormatters.formatear_numero(row.get('cantidad_uvis', '--')),
-            'Uvis_Restantes': CalculosFinancieros.calculate_remaining_uvi(
+            'Uvis_Restantes': CalculosFinancieros.calcular_uvi_restantes(
                 row.get('cantidad_uvis', '--'),
                 uvis_restantes
             ),
@@ -241,7 +241,7 @@ class PDFGenerator:
             
             # Avances
             'Avance_fisico': DataFormatters.formatear_porcentaje(row.get('porcentaje_avance_fisico', '--')),
-            'Avance_Restante': CalculosFinancieros.calculate_remaining_progress(
+            'Avance_Restante': CalculosFinancieros.calculo_viviendas_restantes(
                 row.get('porcentaje_avance_fisico', '--')
             ),
             'Avance_financiero': DataFormatters.formatear_porcentaje(row.get('avance_financiero', '--')),
@@ -250,7 +250,7 @@ class PDFGenerator:
             """ 'Saldo_UVI_Pendiente': saldo_uvi_pendiente,
             'Saldo_Obra_Actualizado': saldo_actualizado_formateado, """
             
-            'Monto_Restante_Actualizado': CalculosFinancieros.calculate_remaining_amount(
+            'Monto_Restante_Actualizado': CalculosFinancieros.calcular_monto_restante(
                 row.get('monto_actualizado', '--'),
                 row.get('monto_pagado', '--')
             ),

@@ -154,24 +154,64 @@ class SheetsReader:
 
     @staticmethod
     def obtener_valor_uvi_api() -> Optional[str]:
-        """Obtiene el valor UVI desde la API del BCRA."""
+        """Obtiene el valor UVI desde la API del BCRA con múltiples fuentes."""
         try:
-            url = "https://api.bcra.gob.ar/estadisticas/v2.0/PrincipalesVariables"
-            response = requests.get(url, timeout=10)
-
-            if response.status_code != 200:
-                return None
-
-            for item in response.json().get('results', []):
-                if item.get('idVariable') == 100:
-                    valor = item.get('valor')
-                    logger.info(f"[OK] UVI BCRA: {valor}")
-                    return str(valor)
-
+            logger.info("[UVI] 🔍 Iniciando consulta a API del BCRA...")
+            
+            # Intentar con la API principal
+            url_principal = "https://api.bcra.gob.ar/estadisticas/v2.0/PrincipalesVariables"
+            logger.info(f"[UVI] 📡 Consultando URL principal: {url_principal}")
+            
+            response = requests.get(url_principal, timeout=10)
+            logger.info(f"[UVI] 📊 Status code: {response.status_code}")
+            
+            if response.status_code == 200:
+                datos = response.json()
+                logger.info(f"[UVI] 📄 Respuesta recibida, buscando variable 100 (UVI)...")
+                logger.debug(f"[UVI] 📊 Datos completos: {datos}")
+                
+                for item in datos.get('results', []):
+                    if item.get('idVariable') == 100:  # ID de la UVI
+                        valor = item.get('valor')
+                        logger.info(f"[UVI] ✅ VALOR UVI ENCONTRADO: {valor}")
+                        return str(valor)
+                
+                logger.warning("[UVI] ⚠️ Variable 100 (UVI) no encontrada en resultados")
+            
+            # Fallback: intentar con endpoint alternativo
+            logger.info("[UVI] 🔄 Intentando con endpoint alternativo...")
+            url_alternativo = "https://api.bcra.gob.ar/estadisticas/v2.0/datosvariable/100"
+            logger.info(f"[UVI] 📡 Consultando URL alternativa: {url_alternativo}")
+            
+            response_alt = requests.get(url_alternativo, timeout=5)
+            logger.info(f"[UVI] 📊 Status code (alternativo): {response_alt.status_code}")
+            
+            if response_alt.status_code == 200:
+                datos_alt = response_alt.json()
+                logger.info(f"[UVI] 📄 Respuesta alternativa recibida")
+                
+                if datos_alt.get('results'):
+                    # Obtener el valor más reciente
+                    ultimo = datos_alt['results'][0]
+                    valor = ultimo.get('valor')
+                    if valor:
+                        logger.info(f"[UVI] ✅ VALOR UVI ENCONTRADO (alternativo): {valor}")
+                        return str(valor)
+                else:
+                    logger.warning("[UVI] ⚠️ No hay resultados en la respuesta alternativa")
+            
+            logger.error("[UVI] ❌ No se pudo obtener UVI de ninguna fuente")
             return None
-
+            
+        except requests.exceptions.Timeout:
+            logger.error("[UVI] ⏰ Timeout consultando API BCRA")
+            return None
+        except requests.exceptions.ConnectionError:
+            logger.error("[UVI] 🔌 Error de conexión con API BCRA")
+            return None
         except Exception as e:
-            logger.warning(f"[!] Error consultando API BCRA: {e}")
+            logger.error(f"[UVI] 💥 Error inesperado consultando API BCRA: {e}")
+            logger.exception(e)  # Esto muestra el traceback completo
             return None
 
     # =========================

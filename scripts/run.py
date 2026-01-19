@@ -12,15 +12,20 @@ Uso:
 import argparse
 import sys
 from pathlib import Path
+import pandas as pd
 
 # Agregar el directorio del proyecto al path para imports
-sys.path.insert(0, str(Path(__file__).parent))
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 from src.data.excel_reader import ExcelReader
 from src.data.sheets_reader import SheetsReader
 from src.processors.resources import ResourceProcessor
 from src.pdf.generator import PDFGenerator
 from utils.helpers import setup_logging, validate_environment, create_project_structure, get_project_info
+from src.processors.saldo_calculator import SaldoCalculator
+from src.processors.formatters import DataFormatters
+from src.processors.calculations import CalculosFinancieros
 
 logger = setup_logging(__name__)
 
@@ -121,7 +126,19 @@ Ejemplos de uso:
             df_combined = df_excel
             logger.info("[OK] Solo datos de Excel")
         
-        # 3. PREPARAR RECURSOS
+        # 3. CALCULAR SALDOS CON UVI DEL BCRA
+        logger.info("[🔄] Calculando saldos de obra con UVI del BCRA...")
+        
+        # Convertir DataFrame a lista de diccionarios para procesar
+        obras_data = df_combined.to_dict('records')
+        
+        # Inicializar calculadora de saldos
+        calculadora = SaldoCalculator()
+        
+        # Procesar todas las obras con el valor UVI del día
+        obras_con_saldo = calculadora.procesar_lote(obras_data)
+        
+        # 4. PREPARAR RECURSOS
         logger.info("[3/4] 🎨 Preparando recursos visuales...")
         resources = ResourceProcessor.prepare_all()
         
@@ -132,6 +149,50 @@ Ejemplos de uso:
             if obra_id and obra_id not in ['--', '']:
                 obra_images = ResourceProcessor.get_work_images(obra_id)
                 resources[f'obra_images_{idx}'] = obra_images
+        
+        # Formatear campos necesarios para cada obra
+        obras_procesadas = []
+        for obra in obras_con_saldo:
+            obra_procesada = {}
+            
+            # Copiar todos los campos originales
+            obra_procesada.update(obra)
+            
+            # Formatear campos específicos
+            if 'Total_UVI' in obra:
+                obra_procesada['Total_UVI'] = DataFormatters.formatear_numero(obra['Total_UVI'])
+            
+            # Calcular avance restante si no existe
+            if 'Avance_fisico' in obra and 'Avance_Restante' not in obra:
+                obra_procesada['Avance_Restante'] = CalculosFinancieros.calculate_progreso_restante(
+                    obra.get('Avance_fisico', '--')
+                )
+            
+            # Asegurar que Saldo_Obra_Actualizado esté presente
+            if 'Saldo_Obra_Actualizado' not in obra_procesada:
+                obra_procesada['Saldo_Obra_Actualizado'] = "--"
+            
+            # Asegurar formato de otros campos clave para el template
+            campos_a_formatear = {
+                'Viviendas_Totales': 'formatear_numero',
+                'Viviendas_Entregadas': 'formatear_numero',
+                'Monto_Convenio': 'formatear_moneda_sin_decimales',
+                'Saldo_UVI_Pendiente': 'formatear_numero',
+                'Uvis_Restantes': 'formatear_numero'
+            }
+            
+            for campo, formateador in campos_a_formatear.items():
+                if campo in obra and obra[campo] not in ['--', '', None]:
+                    try:
+                        if formateador == 'formatear_numero':
+                            obra_procesada[campo] = DataFormatters.formatear_numero(obra[campo])
+                        elif formateador == 'formatear_moneda_sin_decimales':
+                            obra_procesada[campo] = DataFormatters.formatear_moneda_sin_decimales(obra[campo])
+                    except Exception as e:
+                        logger.warning(f"Error formateando {campo}: {e}")
+                        obra_procesada[campo] = obra.get(campo, '--')
+            
+            obras_procesadas.append(obra_procesada)
         
         # 4. GENERAR PDFs
         logger.info("[4/4] 📄 Generando informes PDF...")
